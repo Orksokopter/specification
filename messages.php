@@ -2,6 +2,13 @@
 
 $data = json_decode(@file_get_contents('messages_data_storage.dat'), true);
 
+usort($data, function($a, $b) {
+	if ($a['type_id'] == $b['type_id'])
+		return 0;
+	else
+		return ($a['type_id'] < $b['type_id'] ? -1 : 1);
+});
+
 ob_start("ob_gzhandler");
 header('Content-Type: text/html; charset=utf-8');
 
