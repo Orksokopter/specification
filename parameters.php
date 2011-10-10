@@ -71,6 +71,90 @@ if ($_GET['destroy'])
 	save();
 }
 
+if ($_GET['print_as_cpp'])
+{
+	$cpp_str = 'class Parameters {'."\n".'public:'."\n\t".'enum {'."\n";
+
+	foreach ($data as $le)
+		$cpp_str.= "\t\t".$le['key'].' = '.sprintf('0x%06x', $le['type_id']).",\n";
+	$cpp_str = substr($cpp_str, 0, -2);
+
+	echo $cpp_str."\n\t".'};'."\n".'};';
+}
+
+if ($_GET['print_as_qt'])
+{
+	$cpp_str = '';
+	
+	usort($data, function($a, $b) {
+		return strcmp($a['key'], $b['key']);
+	});
+	
+	$curr_group = '';
+	$groups = array();
+	foreach ($data as $le)
+	{
+		$group = substr($le['key'], 0, strpos($le['key'], '_'));
+		
+		if ($group != $curr_group)
+		{
+			$curr_group = $group;
+			$cpp_str.= '
+QGroupBox *'.strtolower($curr_group).'Box = new QGroupBox(tr("'.$curr_group.'"));
+QFormLayout *'.strtolower($curr_group).'BoxLayout = new QFormLayout();
+'.strtolower($curr_group).'Box->setLayout('.strtolower($curr_group).'BoxLayout);
+			';
+			
+			$groups[] = $curr_group;
+		}
+		
+		$cpp_str.= '
+ParameterSpinBox *'.$le['key'].' = new ParameterSpinBox(Parameters::'.$le['key'].');
+m_parameterSpinBoxes.append('.$le['key'].');
+'.$le['key'].'->setValue(settings.value("'.$le['key'].'", 0).toInt());
+'.strtolower($curr_group).'BoxLayout->addRow(tr("'.substr($le['key'], strpos($le['key'], '_')+1).':"), '.$le['key'].');
+		';
+	}
+	
+	$cpp_str = trim($cpp_str)."\n\n";
+	
+	foreach ($groups as $le)
+		$cpp_str.= 'parameterGroupsLayout->addWidget('.strtolower($le).'Box);'."\n";
+
+	echo substr($cpp_str, 0, -1);
+}
+
+if ($_GET['print_as_qt_1'])
+{
+	$cpp_str = '';
+	
+	usort($data, function($a, $b) {
+		return strcmp($a['key'], $b['key']);
+	});
+	
+	foreach ($data as $le)
+	{
+		if ($cpp_str)
+			$cpp_str.= 'else ';
+		$cpp_str.= 'if (typeId == Parameters::'.$le['key'].')'."\n\t".'return QString("'.$le['key'].'");'."\n";
+	}
+	
+	$cpp_str.= "\n".'return QString();';
+	
+	echo $cpp_str;
+}
+
+if ($_GET['print_as_c'])
+{
+	$cpp_str = 'enum parameter_type {'."\n";
+
+	foreach ($data as $le)
+		$cpp_str.= "\t".$le['key'].' = '.sprintf('0x%06x', $le['type_id']).",\n";
+	$cpp_str = substr($cpp_str, 0, -2);
+
+	echo $cpp_str."\n".'};';
+}
+
 function save()
 {
 	global $data;

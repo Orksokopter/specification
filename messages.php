@@ -89,7 +89,7 @@ if ($_GET['print_as_c'])
 	$cpp_str = 'enum message_type {'."\n";
 
 	foreach ($data as $le)
-		$cpp_str.= "\t".$le['key'].' = '.sprintf('0x%06x', $le['type_id']).",\n";
+		$cpp_str.= "\tMSG_".$le['key'].' = '.sprintf('0x%06x', $le['type_id']).",\n";
 	$cpp_str = substr($cpp_str, 0, -2);
 
 	echo $cpp_str."\n".'};';

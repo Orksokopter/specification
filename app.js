@@ -315,6 +315,110 @@ Ext.onReady(function() {
 
 								param_store.add(tmp);
 							}
+						},
+						{
+							xtype: "button",
+							text: "Als C++ enum anzeigen",
+							iconCls: 'cpp16x16',
+							handler: function() {
+								Ext.Ajax.request({
+									url: 'parameters.php',
+									method: 'get',
+									params: {
+										print_as_cpp: true
+									},
+									success: function(response, opts) {
+										Ext.create('Ext.window.Window', {
+											title: 'Man, das ist der beste Tag seit langem :|',
+											height: 200,
+											width: 400,
+											layout: 'fit',
+											items: {
+												xtype: 'textareafield',
+												value: response.responseText
+											}
+										}).show();
+									}
+								});
+							}
+						},
+						{
+							xtype: "button",
+							text: "Als C enum anzeigen",
+							iconCls: 'c16x16',
+							handler: function() {
+								Ext.Ajax.request({
+									url: 'parameters.php',
+									method: 'get',
+									params: {
+										print_as_c: true
+									},
+									success: function(response, opts) {
+										Ext.create('Ext.window.Window', {
+											title: 'Man, das ist der beste Tag seit langem :|',
+											height: 200,
+											width: 400,
+											layout: 'fit',
+											items: {
+												xtype: 'textareafield',
+												value: response.responseText
+											}
+										}).show();
+									}
+								});
+							}
+						},
+						{
+							xtype: "button",
+							text: "Für den ParametersWidget-Konstruktor anzeigen",
+							iconCls: 'qt16x16',
+							handler: function() {
+								Ext.Ajax.request({
+									url: 'parameters.php',
+									method: 'get',
+									params: {
+										print_as_qt: true
+									},
+									success: function(response, opts) {
+										Ext.create('Ext.window.Window', {
+											title: 'Man, das ist der beste Tag seit langem :|',
+											height: 500,
+											width: 600,
+											layout: 'fit',
+											items: {
+												xtype: 'textareafield',
+												value: response.responseText
+											}
+										}).show();
+									}
+								});
+							}
+						},
+						{
+							xtype: "button",
+							text: "Für ParameterTypeIdToString anzeigen",
+							iconCls: 'qt16x16',
+							handler: function() {
+								Ext.Ajax.request({
+									url: 'parameters.php',
+									method: 'get',
+									params: {
+										print_as_qt_1: true
+									},
+									success: function(response, opts) {
+										Ext.create('Ext.window.Window', {
+											title: 'Man, das ist der beste Tag seit langem :|',
+											height: 500,
+											width: 600,
+											layout: 'fit',
+											items: {
+												xtype: 'textareafield',
+												value: response.responseText
+											}
+										}).show();
+									}
+								});
+							}
 						}
 					],
 					listeners: {
