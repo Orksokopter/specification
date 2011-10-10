@@ -118,7 +118,6 @@ QFormLayout *'.strtolower($curr_group).'BoxLayout = new QFormLayout();
 		$cpp_str.= '
 ParameterSpinBox *'.$le['key'].' = new ParameterSpinBox(Parameters::'.$le['key'].');
 m_parameterSpinBoxes.append('.$le['key'].');
-'.$le['key'].'->setValue(settings.value("'.$le['key'].'", 0).toInt());
 '.strtolower($curr_group).'BoxLayout->addRow(tr("'.substr($le['key'], strpos($le['key'], '_')+1).':"), '.$le['key'].');
 		';
 	}
@@ -156,7 +155,7 @@ if ($_GET['print_as_c'])
 	$cpp_str = 'enum parameter_type {'."\n";
 
 	foreach ($data as $le)
-		$cpp_str.= "\t".$le['key'].' = '.sprintf('0x%06x', $le['type_id']).",\n";
+		$cpp_str.= "\tPARAM_".$le['key'].' = '.sprintf('0x%06x', $le['type_id']).",\n";
 	$cpp_str = substr($cpp_str, 0, -2);
 
 	echo $cpp_str."\n".'};';
