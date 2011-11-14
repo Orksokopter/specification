@@ -117,8 +117,12 @@ QFormLayout *'.strtolower($curr_group).'BoxLayout = new QFormLayout();
 		
 		$cpp_str.= '
 ParameterSpinBox *'.$le['key'].' = new ParameterSpinBox(Parameters::'.$le['key'].');
+'.$le['key'].'->setMinimum(-2147483648);
+'.$le['key'].'->setMinimum(2147483647);
 m_parameterSpinBoxes.append('.$le['key'].');
 '.strtolower($curr_group).'BoxLayout->addRow(tr("'.substr($le['key'], strpos($le['key'], '_')+1).':"), '.$le['key'].');
+m_signalMapper->setMapping('.$le['key'].', '.$le['key'].');
+connect('.$le['key'].', SIGNAL(valueChanged(int)), m_signalMapper, SLOT(map()));
 		';
 	}
 	
