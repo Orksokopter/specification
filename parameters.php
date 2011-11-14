@@ -92,44 +92,44 @@ if ($_GET['print_as_cpp'])
 if ($_GET['print_as_qt'])
 {
 	$cpp_str = '';
-	
-	usort($data, function($a, $b) {
-		return strcmp($a['key'], $b['key']);
-	});
-	
-	$curr_group = '';
-	$groups = array();
+
+	// Zuerst mal die Parametergruppen zusammenfassen
+	$array_sorted_parameters = array();
 	foreach ($data as $le)
 	{
 		$group = substr($le['key'], 0, strpos($le['key'], '_'));
-		
-		if ($group != $curr_group)
-		{
-			$curr_group = $group;
-			$cpp_str.= '
-QGroupBox *'.strtolower($curr_group).'Box = new QGroupBox(tr("'.$curr_group.'"));
-QFormLayout *'.strtolower($curr_group).'BoxLayout = new QFormLayout();
-'.strtolower($curr_group).'Box->setLayout('.strtolower($curr_group).'BoxLayout);
-			';
-			
-			$groups[] = $curr_group;
-		}
-		
-		$cpp_str.= '
-ParameterSpinBox *'.$le['key'].' = new ParameterSpinBox(Parameters::'.$le['key'].');
-'.$le['key'].'->setMinimum(-2147483648);
-'.$le['key'].'->setMinimum(2147483647);
-m_parameterSpinBoxes.append('.$le['key'].');
-'.strtolower($curr_group).'BoxLayout->addRow(tr("'.substr($le['key'], strpos($le['key'], '_')+1).':"), '.$le['key'].');
-m_signalMapper->setMapping('.$le['key'].', '.$le['key'].');
-connect('.$le['key'].', SIGNAL(valueChanged(int)), m_signalMapper, SLOT(map()));
-		';
+
+		$array_sorted_parameters[$group][$le['type_id']] = $le['key'];
 	}
-	
+
+	// Dann die Parameter innerhalb der Gruppen nach type_id sortieren
+	foreach ($array_sorted_parameters as &$le)
+		ksort($le);
+	unset($le);
+
+	foreach ($array_sorted_parameters as $group => $array_parameters)
+	{
+		$cpp_str.= '
+QGroupBox *'.strtolower($group).'Box = new QGroupBox(tr("'.$group.'"));
+QFormLayout *'.strtolower($group).'BoxLayout = new QFormLayout();
+'.strtolower($group).'Box->setLayout('.strtolower($group).'BoxLayout);
+		';
+
+		foreach ($array_parameters as $type_id => $key)
+			$cpp_str.= '
+ParameterSpinBox *'.$key.' = new ParameterSpinBox(Parameters::'.$key.');
+'.$key.'->setRange(INT_MIN, 2147483647);
+m_parameterSpinBoxes.append('.$key.');
+'.strtolower($group).'BoxLayout->addRow(tr("'.substr($key, strpos($key, '_')+1).':"), '.$key.');
+m_signalMapper->setMapping('.$key.', '.$key.');
+connect('.$key.', SIGNAL(valueChanged(int)), m_signalMapper, SLOT(map()));
+			';
+	}
+
 	$cpp_str = trim($cpp_str)."\n\n";
-	
-	foreach ($groups as $le)
-		$cpp_str.= 'parameterGroupsLayout->addWidget('.strtolower($le).'Box);'."\n";
+
+	foreach ($array_sorted_parameters as $group => $dummy)
+		$cpp_str.= 'parameterGroupsLayout->addWidget('.strtolower($group).'Box);'."\n";
 
 	echo substr($cpp_str, 0, -1);
 }
@@ -137,20 +137,20 @@ connect('.$le['key'].', SIGNAL(valueChanged(int)), m_signalMapper, SLOT(map()));
 if ($_GET['print_as_qt_1'])
 {
 	$cpp_str = '';
-	
+
 	usort($data, function($a, $b) {
 		return strcmp($a['key'], $b['key']);
 	});
-	
+
 	foreach ($data as $le)
 	{
 		if ($cpp_str)
 			$cpp_str.= 'else ';
 		$cpp_str.= 'if (typeId == Parameters::'.$le['key'].')'."\n\t".'return QString("'.$le['key'].'");'."\n";
 	}
-	
+
 	$cpp_str.= "\n".'return QString();';
-	
+
 	echo $cpp_str;
 }
 
