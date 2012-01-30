@@ -135,7 +135,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Neu",
-							iconCls: 'addrow16x16',
+							icon: 'edit-table-insert-row-under.png',
 							handler: function() {
 								var current_entries = msg_store.collect("type_id");
 								var next_type_id = parseInt(current_entries.pop())+1;
@@ -153,7 +153,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C++ enum anzeigen",
-							iconCls: 'cpp16x16',
+							icon: 'text-x-c++src.png',
 							handler: function() {
 								Ext.Ajax.request({
 									url: 'messages.php',
@@ -179,7 +179,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C enum anzeigen",
-							iconCls: 'c16x16',
+							icon: 'text-x-csrc.png',
 							handler: function() {
 								Ext.Ajax.request({
 									url: 'messages.php',
@@ -208,7 +208,7 @@ Ext.onReady(function() {
 							new Ext.menu.Menu({
 								items: {
 									text: "Löschen",
-									iconCls: 'deleterow16x16',
+									icon: 'edit-table-delete-row.png',
 									handler: function() {
 										msg_store.removeAt(rowindex);
 									}
@@ -301,7 +301,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Neu",
-							iconCls: 'addrow16x16',
+							icon: 'edit-table-insert-row-under.png',
 							handler: function() {
 								var current_entries = param_store.collect("type_id");
 								var next_type_id = parseInt(current_entries.pop())+1;
@@ -319,7 +319,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C++ enum anzeigen",
-							iconCls: 'cpp16x16',
+							icon: 'text-x-c++src.png',
 							handler: function() {
 								Ext.Ajax.request({
 									url: 'parameters.php',
@@ -345,7 +345,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C enum anzeigen",
-							iconCls: 'c16x16',
+							icon: 'text-x-csrc.png',
 							handler: function() {
 								Ext.Ajax.request({
 									url: 'parameters.php',
@@ -371,7 +371,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Für den ParametersWidget-Konstruktor anzeigen",
-							iconCls: 'qt16x16',
+							icon: 'qt.png',
 							handler: function() {
 								Ext.Ajax.request({
 									url: 'parameters.php',
@@ -397,7 +397,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Für ParameterTypeIdToString anzeigen",
-							iconCls: 'qt16x16',
+							icon: 'qt.png',
 							handler: function() {
 								Ext.Ajax.request({
 									url: 'parameters.php',
@@ -426,7 +426,7 @@ Ext.onReady(function() {
 							new Ext.menu.Menu({
 								items: {
 									text: "Löschen",
-									iconCls: 'deleterow16x16',
+									icon: 'edit-table-delete-row.png',
 									handler: function() {
 										param_store.removeAt(rowindex);
 									}
