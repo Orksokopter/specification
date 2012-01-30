@@ -86,7 +86,16 @@ if ($_GET['print_as_cpp'])
 		$cpp_str.= "\t\t".$le['key'].' = '.sprintf('0x%06x', $le['type_id']).",\n";
 	$cpp_str = substr($cpp_str, 0, -2);
 
-	echo $cpp_str."\n\t".'};'."\n".'};';
+	$cpp_str.= "\n\t".'};'."\n\n";
+
+	$cpp_str.= "\t".'static std::vector<int> getParameterVector() {'."\n";
+	$cpp_str.= "\t\t".'std::vector<int> v;'."\n";
+	foreach ($data as $le)
+		$cpp_str.= "\t\t".'v.push_back('.sprintf('0x%06x', $le['type_id']).');'."\n";
+	$cpp_str.= "\t\t".'return v;'."\n";
+	$cpp_str.= "\t".'}'."\n";
+
+	echo $cpp_str.'};';
 }
 
 if ($_GET['print_as_qt'])
@@ -111,19 +120,17 @@ if ($_GET['print_as_qt'])
 	{
 		$cpp_str.= '
 QGroupBox *'.strtolower($group).'Box = new QGroupBox(tr("'.$group.'"));
-QFormLayout *'.strtolower($group).'BoxLayout = new QFormLayout();
-'.strtolower($group).'Box->setLayout('.strtolower($group).'BoxLayout);
-		';
+QVBoxLayout *'.strtolower($group).'Layout = new QVBoxLayout();
+'.strtolower($group).'Box->setLayout('.strtolower($group).'Layout);
+
+';
 
 		foreach ($array_parameters as $type_id => $key)
-			$cpp_str.= '
-ParameterSpinBox *'.$key.' = new ParameterSpinBox(Parameters::'.$key.');
-'.$key.'->setRange(INT_MIN, 2147483647);
-m_parameterSpinBoxes.append('.$key.');
-'.strtolower($group).'BoxLayout->addRow(tr("'.substr($key, strpos($key, '_')+1).':"), '.$key.');
-m_signalMapper->setMapping('.$key.', '.$key.');
-connect('.$key.', SIGNAL(valueChanged(int)), m_signalMapper, SLOT(map()));
-			';
+			$cpp_str.= 'create_parameter_widget(Parameters::'.$key.', '.strtolower($group).'Layout);'."\n";
+
+		$cpp_str.='
+'.strtolower($group).'Layout->addStretch();
+';
 	}
 
 	$cpp_str = trim($cpp_str)."\n\n";
