@@ -98,6 +98,17 @@ if ($_GET['print_as_cpp'])
 	echo $cpp_str.'};';
 }
 
+if ($_GET['print_as_python_class'])
+{
+	$py_str = 'class Parameters:'."\n";
+
+	foreach ($data as $le)
+		$py_str.= "\t".$le['key'].' = '.sprintf('0x%06x', $le['type_id'])."\n";
+	$py_str = substr($py_str, 0, -1);
+
+	echo $py_str;
+}
+
 if ($_GET['print_as_qt'])
 {
 	$cpp_str = '';
@@ -139,6 +150,49 @@ QVBoxLayout *'.strtolower($group).'Layout = new QVBoxLayout();
 		$cpp_str.= 'parameterGroupsLayout->addWidget('.strtolower($group).'Box);'."\n";
 
 	echo substr($cpp_str, 0, -1);
+}
+
+if ($_GET['print_as_python_constructor'])
+{
+	$py_str = '';
+
+	// Zuerst mal die Parametergruppen zusammenfassen
+	$array_sorted_parameters = array();
+	foreach ($data as $le)
+	{
+		$group = substr($le['key'], 0, strpos($le['key'], '_'));
+
+		$array_sorted_parameters[$group][$le['type_id']] = $le['key'];
+	}
+
+	// Dann die Parameter innerhalb der Gruppen nach type_id sortieren
+	foreach ($array_sorted_parameters as &$le)
+		ksort($le);
+	unset($le);
+
+	foreach ($array_sorted_parameters as $group => $array_parameters)
+	{
+		$py_str.= '
+QGroupBox *'.strtolower($group).'Box = new QGroupBox(tr("'.$group.'"));
+QVBoxLayout *'.strtolower($group).'Layout = new QVBoxLayout();
+'.strtolower($group).'Box->setLayout('.strtolower($group).'Layout);
+
+';
+
+		foreach ($array_parameters as $type_id => $key)
+			$py_str.= 'self.create_parameter_widget(Parameters::'.$key.', '.strtolower($group).'Layout);'."\n";
+
+		$py_str.='
+'.strtolower($group).'Layout->addStretch();
+';
+	}
+
+	$py_str = trim($py_str)."\n\n";
+
+	foreach ($array_sorted_parameters as $group => $dummy)
+		$py_str.= 'parameterGroupsLayout->addWidget('.strtolower($group).'Box);'."\n";
+
+	echo substr($py_str, 0, -1);
 }
 
 if ($_GET['print_as_qt_1'])
