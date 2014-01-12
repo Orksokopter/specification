@@ -1,0 +1,6 @@
+class {{ class_name }} {{ '{' }}
+public:
+    enum {{ '{' }}{% for line in lines %}
+        {{ line.key }} = {{ line.type_id|hex(6) }}{% if not loop.last %},{% endif %}{% endfor %}
+    {{ '}' }};
+{{ '}' }};

@@ -1,0 +1,3 @@
+enum {{ enum_name }} {{ '{' }}{% for line in lines %}
+    {{ enum_prefix }}{{ line.key }} = {{ line.type_id|hex(6) }}{% if not loop.last %},{% endif %}{% endfor %}
+{{ '}' }};

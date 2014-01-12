@@ -1,0 +1,2 @@
+class {{ class_name }}:{% for line in lines %}
+    {{ attribute_prefix }}{{ line.key }} = {{ line.type_id|hex(6) }}{% endfor %}

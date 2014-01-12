@@ -13,6 +13,11 @@ function fit_grid_columns(grid) {
 	}
 }
 
+function url(key) {
+    /** @namespace window.urls */
+    return window.urls[key];
+}
+
 Ext.onReady(function() {
 	viewport = new Ext.Viewport({
 		layout: 'fit',
@@ -113,10 +118,10 @@ Ext.onReady(function() {
 								idProperty: "index"
 							},
 							api: {
-								create: 'messages.php?create=1',
-								read: 'messages.php?read=1',
-								update: 'messages.php?update=1',
-								destroy: 'messages.php?destroy=1'
+								create: url('messages_create'),
+								read: url('messages'),
+								update: url('messages_update'),
+								destroy: url('messages_destroy')
 							}
 						},
 						sorters: [
@@ -135,7 +140,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Neu",
-							icon: 'img/edit-table-insert-row-under.png',
+							icon: url('static_dir') + 'edit-table-insert-row-under.png',
 							handler: function() {
 								var current_entries = msg_store.collect("type_id");
 								var next_type_id = parseInt(current_entries.pop())+1;
@@ -153,15 +158,12 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C++ enum anzeigen",
-							icon: 'img/text-x-c++src.png',
+							icon: url('static_dir') + 'text-x-c++src.png',
 							handler: function() {
 								Ext.Ajax.request({
-									url: 'messages.php',
+									url: url('messages_as_c_enum'),
 									method: 'get',
-									params: {
-										print_as_cpp: true
-									},
-									success: function(response, opts) {
+									success: function(response) {
 										Ext.create('Ext.window.Window', {
 											title: 'Man, das ist der beste Tag seit langem :|',
 											height: 200,
@@ -179,15 +181,12 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C enum anzeigen",
-							icon: 'img/text-x-csrc.png',
+							icon: url('static_dir') + 'text-x-csrc.png',
 							handler: function() {
 								Ext.Ajax.request({
-									url: 'messages.php',
+									url: url('messages_as_cpp_enum'),
 									method: 'get',
-									params: {
-										print_as_c: true
-									},
-									success: function(response, opts) {
+									success: function(response) {
 										Ext.create('Ext.window.Window', {
 											title: 'Man, das ist der beste Tag seit langem :|',
 											height: 200,
@@ -201,14 +200,40 @@ Ext.onReady(function() {
 									}
 								});
 							}
-						}
+						},
+                        {
+                            xtype: "button",
+                            text: "Als Python enum-Klasse anzeigen",
+                            icon: url('static_dir') + 'text-x-python.png',
+                            handler: function () {
+                                Ext.Ajax.request({
+                                    url: url('messages_as_python_class'),
+                                    method: 'get',
+                                    params: {
+                                        print_as_python_class: true
+                                    },
+                                    success: function (response) {
+                                        Ext.create('Ext.window.Window', {
+                                            title: 'Man, das ist der beste Tag seit langem :|',
+                                            height: 200,
+                                            width: 400,
+                                            layout: 'fit',
+                                            items: {
+                                                xtype: 'textareafield',
+                                                value: response.responseText
+                                            }
+                                        }).show();
+                                    }
+                                });
+                            }
+                        }
 					],
 					listeners: {
 						itemcontextmenu: function(grid, record, item, rowindex, e) {
 							new Ext.menu.Menu({
 								items: {
 									text: "Löschen",
-									icon: 'img/edit-table-delete-row.png',
+									icon: url('static_dir') + 'edit-table-delete-row.png',
 									handler: function() {
 										msg_store.removeAt(rowindex);
 									}
@@ -279,10 +304,10 @@ Ext.onReady(function() {
 								idProperty: "index"
 							},
 							api: {
-								create: 'parameters.php?create=1',
-								read: 'parameters.php?read=1',
-								update: 'parameters.php?update=1',
-								destroy: 'parameters.php?destroy=1'
+								create: url('parameters_create'),
+								read: url('parameters'),
+								update: url('parameters_update'),
+								destroy: url('parameters_destroy')
 							}
 						},
 						sorters: [
@@ -301,7 +326,7 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Neu",
-							icon: 'img/edit-table-insert-row-under.png',
+							icon: url('static_dir') + 'edit-table-insert-row-under.png',
 							handler: function() {
 								var current_entries = param_store.collect("type_id");
 								var next_type_id = parseInt(current_entries.pop())+1;
@@ -319,15 +344,12 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C++ enum anzeigen",
-							icon: 'img/text-x-c++src.png',
+							icon: url('static_dir') + 'text-x-c++src.png',
 							handler: function() {
 								Ext.Ajax.request({
-									url: 'parameters.php',
+									url: url('parameters_as_cpp_enum'),
 									method: 'get',
-									params: {
-										print_as_cpp: true
-									},
-									success: function(response, opts) {
+									success: function(response) {
 										Ext.create('Ext.window.Window', {
 											title: 'Man, das ist der beste Tag seit langem :|',
 											height: 200,
@@ -345,15 +367,12 @@ Ext.onReady(function() {
 						{
 							xtype: "button",
 							text: "Als C enum anzeigen",
-							icon: 'img/text-x-csrc.png',
+							icon: url('static_dir') + 'text-x-csrc.png',
 							handler: function() {
 								Ext.Ajax.request({
-									url: 'parameters.php',
+									url: url('parameters_as_c_enum'),
 									method: 'get',
-									params: {
-										print_as_c: true
-									},
-									success: function(response, opts) {
+									success: function(response) {
 										Ext.create('Ext.window.Window', {
 											title: 'Man, das ist der beste Tag seit langem :|',
 											height: 200,
@@ -368,117 +387,36 @@ Ext.onReady(function() {
 								});
 							}
 						},
-						{
-							xtype: "button",
-							text: "Als Python enum-Klasse anzeigen",
-							icon: 'img/text-x-python.png',
-							handler: function() {
-								Ext.Ajax.request({
-									url: 'parameters.php',
-									method: 'get',
-									params: {
-										print_as_python_class: true
-									},
-									success: function(response, opts) {
-										Ext.create('Ext.window.Window', {
-											title: 'Man, das ist der beste Tag seit langem :|',
-											height: 200,
-											width: 400,
-											layout: 'fit',
-											items: {
-												xtype: 'textareafield',
-												value: response.responseText
-											}
-										}).show();
-									}
-								});
-							}
-						},
-						{
-							xtype: "button",
-							text: "Für den ParametersWidget-Konstruktor anzeigen",
-							icon: 'img/qt.png',
-							handler: function() {
-								Ext.Ajax.request({
-									url: 'parameters.php',
-									method: 'get',
-									params: {
-										print_as_qt: true
-									},
-									success: function(response, opts) {
-										Ext.create('Ext.window.Window', {
-											title: 'Man, das ist der beste Tag seit langem :|',
-											height: 500,
-											width: 600,
-											layout: 'fit',
-											items: {
-												xtype: 'textareafield',
-												value: response.responseText
-											}
-										}).show();
-									}
-								});
-							}
-						},
-						{
-							xtype: "button",
-							text: "Für den Python ParametersWidget-Konstruktor anzeigen",
-							icon: 'img/qt.png',
-							handler: function() {
-								Ext.Ajax.request({
-									url: 'parameters.php',
-									method: 'get',
-									params: {
-										print_as_python_constructor: true
-									},
-									success: function(response, opts) {
-										Ext.create('Ext.window.Window', {
-											title: 'Man, das ist der beste Tag seit langem :|',
-											height: 500,
-											width: 600,
-											layout: 'fit',
-											items: {
-												xtype: 'textareafield',
-												value: response.responseText
-											}
-										}).show();
-									}
-								});
-							}
-						},
-						{
-							xtype: "button",
-							text: "Für ParameterTypeIdToString anzeigen",
-							icon: 'img/qt.png',
-							handler: function() {
-								Ext.Ajax.request({
-									url: 'parameters.php',
-									method: 'get',
-									params: {
-										print_as_qt_1: true
-									},
-									success: function(response, opts) {
-										Ext.create('Ext.window.Window', {
-											title: 'Man, das ist der beste Tag seit langem :|',
-											height: 500,
-											width: 600,
-											layout: 'fit',
-											items: {
-												xtype: 'textareafield',
-												value: response.responseText
-											}
-										}).show();
-									}
-								});
-							}
-						}
+                        {
+                            xtype: "button",
+                            text: "Als Python enum-Klasse anzeigen",
+                            icon: url('static_dir') + 'text-x-python.png',
+                            handler: function () {
+                                Ext.Ajax.request({
+                                    url: url('parameters_as_python_class'),
+                                    method: 'get',
+                                    success: function (response) {
+                                        Ext.create('Ext.window.Window', {
+                                            title: 'Man, das ist der beste Tag seit langem :|',
+                                            height: 200,
+                                            width: 400,
+                                            layout: 'fit',
+                                            items: {
+                                                xtype: 'textareafield',
+                                                value: response.responseText
+                                            }
+                                        }).show();
+                                    }
+                                });
+                            }
+                        }
 					],
 					listeners: {
 						itemcontextmenu: function(grid, record, item, rowindex, e) {
 							new Ext.menu.Menu({
 								items: {
 									text: "Löschen",
-									icon: 'img/edit-table-delete-row.png',
+									icon: url('static_dir') + 'edit-table-delete-row.png',
 									handler: function() {
 										param_store.removeAt(rowindex);
 									}
@@ -508,12 +446,12 @@ Ext.onReady(function() {
 
 								panel.getEl().mask("Alter, ich speicher doch schon. Bleib mal locker.");
 								Ext.Ajax.request({
-									url: 'specs.php',
+									url: url('specs'),
 									method: 'post',
 									params: {
 										new_html: editor.getValue()
 									},
-									success: function(response, opts) {
+									success: function() {
 										panel.getEl().unmask();
 									}
 								});
@@ -526,8 +464,8 @@ Ext.onReady(function() {
 							var editor = panel.getComponent("specs_edit");
 
 							Ext.Ajax.request({
-								url: 'specs.php',
-								success: function(response, opts) {
+								url: url('specs'),
+								success: function(response) {
 									panel.getEl().unmask();
 									editor.setValue(response.responseText);
 								}

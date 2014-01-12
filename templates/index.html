@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Mikrokopter</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" href="//olle-orks.org/extjs/resources/css/ext-all.css" />
+	<script src="//olle-orks.org/extjs/ext-all.js"></script>
+    <script>
+        window.urls = {
+                'static_dir': {{ url_for('static', filename='app.js')|replace("app.js", "")|json }},
+                'specs': {{ url_for('specs')|json }},
+                'messages': {{ url_for('messages')|json }},
+                'messages_create': {{ url_for('messages_create')|json }},
+                'messages_update': {{ url_for('messages_update')|json }},
+                'messages_destroy': {{ url_for('messages_destroy')|json }},
+                'messages_as_c_enum': {{ url_for('messages_as_c_enum')|json }},
+                'messages_as_cpp_enum': {{ url_for('messages_as_cpp_enum')|json }},
+                'messages_as_python_class': {{ url_for('messages_as_python_class')|json }},
+                'parameters': {{ url_for('parameters')|json }},
+                'parameters_create': {{ url_for('parameters_create')|json }},
+                'parameters_update': {{ url_for('parameters_update')|json }},
+                'parameters_destroy': {{ url_for('parameters_destroy')|json }},
+                'parameters_as_c_enum': {{ url_for('parameters_as_c_enum')|json }},
+                'parameters_as_cpp_enum': {{ url_for('parameters_as_cpp_enum')|json }},
+                'parameters_as_python_class': {{ url_for('parameters_as_python_class')|json }}
+        };
+    </script>
+	<script src="{{ url_for('static', filename='sprintf-0.7-beta1.js') }}"></script>
+	<script src="{{ url_for('static', filename='app.js') }}"></script>
+<body>
+
+</body>
+</html>
