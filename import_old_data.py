@@ -4,7 +4,10 @@ from orksokopter_specification import db, Message, Parameter, Text
 
 data_path = os.path.join(os.path.dirname(__file__), 'old_data')
 
-os.unlink(os.path.join(os.path.dirname(__file__), 'data', 'database.db'))
+DATABASE_FILE = os.path.join(os.path.dirname(__file__), 'data', 'database.db')
+
+if os.path.exists(DATABASE_FILE):
+    os.unlink(DATABASE_FILE)
 db.create_all()
 
 messages = open(os.path.join(data_path, 'messages_data_storage.json'), 'r', encoding="UTF-8").read()
