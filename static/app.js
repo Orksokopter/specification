@@ -161,7 +161,7 @@ Ext.onReady(function() {
 							icon: url('static_dir') + 'text-x-c++src.png',
 							handler: function() {
 								Ext.Ajax.request({
-									url: url('messages_as_c_enum'),
+									url: url('messages_as_cpp_enum'),
 									method: 'get',
 									success: function(response) {
 										Ext.create('Ext.window.Window', {
@@ -184,7 +184,7 @@ Ext.onReady(function() {
 							icon: url('static_dir') + 'text-x-csrc.png',
 							handler: function() {
 								Ext.Ajax.request({
-									url: url('messages_as_cpp_enum'),
+									url: url('messages_as_c_enum'),
 									method: 'get',
 									success: function(response) {
 										Ext.create('Ext.window.Window', {
